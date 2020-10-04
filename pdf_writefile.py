@@ -3,12 +3,28 @@ import PyPDF2,os,re
 
 class TextWriter:
 
-    def __init__(self,destination,pdf):
+    def __init__(self,destination,directory):
         self.destination = destination
-        self.pdf = pdf
+        self.directory = directory
 
-    def open_file(self):
-        f = open(self.pdf,"rb")
+    def menu(self):
+        file_list = []
+        number = 0
+        dictionary = {
+
+        }
+        for files in os.listdir(self.directory):
+            if files.endswith(".pdf"):
+                file_list.append(files)
+                number += 1
+                dictionary[number] = files
+                print(f"{number}.) {dictionary[number]}")
+        answer  = input("which pdf would you like to convert to text file?\n\t type the number:")
+        self.open_file(dictionary[int(answer)])
+
+    def open_file(self,pdf):
+        location = self.directory + "/"+ pdf
+        f = open(location,"rb")
         file_reader = PyPDF2.PdfFileReader(f)
         string = ""
         for num in range(1,file_reader.numPages):
@@ -20,17 +36,11 @@ class TextWriter:
         file.close()
         f.close()
 
-    def select_pdf(self):
-        directory = input("Please input the directory you wish to open a pdf")
-        list_dir = []
-        number = 0
-        for files in os.listdir(directory):
-            number +=1
-            list_dir.append(files)
-
 
 if __name__ == "__main__":
     destination = input("Where do you want to write the file?\n")
-    pdf = input("")
+    directory  = input("Where is the location of the pdf?\n")
+    t = TextWriter(destination,directory)
+    t.menu()
 
 
