@@ -24,7 +24,7 @@ class KeywordChecker:
             print(str(num)+".)  "+str(self.dictionary[num])+"\n")
         print("Which pdf file would you like to scan?")
         print("please input number")
-        self.pdf = int(input())
+        pdf = int(input())
         print("You have selected "+self.dictionary[pdf])
         self.open_file(self.dictionary[pdf])
 
@@ -42,9 +42,17 @@ class KeywordChecker:
 
         searching = re.search(self.keyword,string)
         if searching == None:
-            print(f"The keyword: '{self.keyword}' cannot be found in the pdf")
+            print(f"The keyword: '{self.keyword}' cannot be found in '{file_name}'")
         elif searching != None:
-            print(f"{self.keyword} is found")
+            print(f"{self.keyword} is found in '{file_name}'")
+        print("Would you like to scan again?"+("\n"*2)+ "YES or NO")
+        answer = input()
+        answer_lower = answer.lower()
+        while answer_lower:
+            if answer_lower == "yes":
+                self.list_directory()
+            else:
+                break
 
     def scan_directory(self):
         file_list = []
