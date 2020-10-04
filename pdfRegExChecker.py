@@ -28,31 +28,26 @@ class KeywordChecker:
         print("You have selected "+self.dictionary[pdf])
         self.open_file(self.dictionary[pdf])
 
-
     def open_file(self,file_name):
         pdf = self.directory +"/" + file_name
         f = open(pdf,"rb")
         file_reader =  PyPDF2.PdfFileReader(f)
         string = ""
+        number = 0
         for num in range(1,file_reader.numPages):
             get_page = file_reader.getPage(num)
             text = get_page.extractText()
             string +=text
+            number += 1
 
-
+        print(f"There are {str(number)} pages to be scanned in '{file_name}'\n")
         searching = re.search(self.keyword,string)
         if searching == None:
-            print(f"The keyword: '{self.keyword}' cannot be found in '{file_name}'")
+            print(f"\tThe keyword: '{self.keyword}' cannot be found in '{file_name}'\n")
         elif searching != None:
-            print(f"{self.keyword} is found in '{file_name}'")
-        print("Would you like to scan again?"+("\n"*2)+ "YES or NO")
-        answer = input()
-        answer_lower = answer.lower()
-        while answer_lower:
-            if answer_lower == "yes":
-                self.list_directory()
-            else:
-                break
+            print(f"\t'{self.keyword}' is found in '{file_name}'\n")
+
+
 
     def scan_directory(self):
         file_list = []
@@ -60,6 +55,10 @@ class KeywordChecker:
             file_list.append(files)
 
         selected_files = list(filter(lambda x: x.endswith(".pdf"),file_list))
+        numbers = 0
+        for nums in selected_files:
+            numbers += 1
+        print(f"There are {str(numbers)} pdfs in '{self.directory}'")
         for files in selected_files:
             self.open_file(files)
 
