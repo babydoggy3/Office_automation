@@ -1,6 +1,7 @@
 #!/home/baby/kivy_venv/bin/python3
-import os,csv
+import os,csv,datetime
 class Budget:
+    dictionary = {}
     def __init__(self,bank,money,spent=0):
         self.bank = bank
         self.money = money
@@ -52,14 +53,23 @@ class Budget:
         f = open(choice)
         reader = csv.reader(f)
         data = list(reader)
-        print(data)
+        for items in data:
+            print(items)
         f.close()
+            
 
     
         
     #option to write 
     def write(self,choice):
-        pass
+        f = open(choice,"w")
+        writer = csv.writer(f)
+        date = self.date()
+        writer.writerow(["Date","bank","money","spent"])
+        writer.writerow([date,self.bank,self.money,self.spent])
+        f.close
+        self.read(choice)
+
 
 
 
@@ -67,11 +77,21 @@ class Budget:
 
     #current standing of user for that day
 
+    #date
+    @staticmethod
+    def date():
+        today = datetime.datetime.now()
+        date = today.strftime("%B %d,%Y")
+        return date
+         
+        
+
+
+
     
 
 def main():
     b = Budget(bank=3000,money=400,spent=300)
     b.option()
-
 if __name__ == "__main__":
     main()
