@@ -1,65 +1,77 @@
-#!/home/baby/kivy_venv/bin/python
-import csv,os,datetime
+#!/home/baby/kivy_venv/bin/python3
+import os,csv
 class Budget:
     def __init__(self,bank,money,spent=0):
         self.bank = bank
         self.money = money
         self.spent = spent
-    
-    #Total amount spent on that day
-    def totalSpent(self):
-        remaining = self.money - self.spent
-        return f"Amount spent on {self.dateFunc()} is PHP{remaining}"
-    #When did you withdraw and how much?
-    def withdraw(self,cash):
-        withdrawCash = self.bank -cash
-        bankAmount = withdrawCash 
-        return "remaining balance: {}\nWithdrawn: {}".format(bankAmount,cash)
-    #returns the date
-    def dateFunc(self):
-        today = datetime.date.today()
-        date = today.strftime("%B %d,%Y")
-        return date
+        self.directory = "/home/baby/Desktop/budget"
+    #ask what the user wants to do
+    def option(self):
+        print("Welcome to the money budgeting program\n\tby:Claude Daigan\n")
+        print("What do you want to do?\n(Please input a number)")
 
-
-    def writeCSV(self,name):
-        directory = "/home/baby/Desktop/budget"
-        path = os.path.join(directory,str(name))
-        f = open(path+".csv","w",newline="")
-        writeFile = csv.writer(f)
-        print(datetime.date.today())
-        writeFile.writerow(["bank","money","spent"])
-        writeFile.writerow([self.bank,self.money,self.spent])
-        writeFile.writerow([self.totalSpent()])
-        f.close()
-        
-    def listFiles(self):
-        directory = "/home/baby/Desktop/budget" #input your own directory
-        dictionary = {}
+        choices = {
+            1:"Read",
+            2:"Write"
+        }
         num = 0
-        for files in os.listdir(directory):
+        for c in choices:
             num += 1
-            dictionary[num] = files
-        print(f"There are {num} files in '{directory}'")
-        for i in range(1,num+1):
-            print(f'{i}.)  {dictionary[i]}')
-        choice = int(input("Which file would you want to update?"))
-        chosen = dictionary[choice]
-        path_chosen = os.path.join(directory,chosen)
-        f = open(path_chosen)
+            print(f"{num}.) {choices[c]}")
+        print("\n")
+        choice = input()
+        self.listDir(choice)
+        
+    #print directory:
+    def listDir(self,choice):
+        menu = {}
+        num = 0
+        for files in os.listdir(self.directory):
+            if files.endswith(".csv"):
+                num += 1
+                menu[num] = files
+        print(f"There are {num} CSVs in '{self.directory}'")
+        num = 0
+        for c in menu:
+            num += 1
+            print(f"{num}.)  {menu[c]}")
+        selected = input()
+        chosen = menu[int(selected)]
+        chosen_path = os.path.join(self.directory,chosen)
+        if choice == "1":
+            self.read(chosen_path)
+        elif choice == "2":
+            self.write(chosen_path)
+        else:
+            print("please input number")
+        
+
+    # option to read
+    def read(self,choice):
+        f = open(choice)
         reader = csv.reader(f)
-        for i in reader:
-            print(i)
+        data = list(reader)
+        print(data)
+        f.close()
+
+    
+        
+    #option to write 
+    def write(self,choice):
+        pass
 
 
+
+    #list directory
+
+    #current standing of user for that day
+
+    
 
 def main():
-    # bank = input("how much money is in your bank account?\n")
-    # money = input("how much money do you have right now?\n")
-    # spent = input("how much money did you spend today?\n")
-    b = Budget(bank=600,money=200,spent=20)
-    b.writeCSV("budget")
-    b.listFiles()
-    
+    b = Budget(bank=3000,money=400,spent=300)
+    b.option()
+
 if __name__ == "__main__":
     main()
