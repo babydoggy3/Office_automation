@@ -1,7 +1,6 @@
 #!/home/baby/kivy_venv/bin/python3
 import os,csv,datetime
 class Budget:
-    dictionary = {}
     def __init__(self,bank,money,spent=0):
         self.bank = bank
         self.money = money
@@ -20,7 +19,6 @@ class Budget:
         for c in choices:
             num += 1
             print(f"{num}.) {choices[c]}")
-        print("\n")
         choice = input()
         self.listDir(choice)
         
@@ -46,7 +44,6 @@ class Budget:
             self.write(chosen_path)
         else:
             print("please input number")
-        
 
     # option to read
     def read(self,choice):
@@ -56,42 +53,54 @@ class Budget:
         for items in data:
             print(items)
         f.close()
-            
+        self.toContinue()
 
-    
-        
+    def reader(self,file):
+        f = open(file)
+        reader = csv.reader(f)
+        for i in reader:
+            print(i)
+        f.close
+        self.toContinue
+
     #option to write 
     def write(self,choice):
-        f = open(choice,"w")
+        f = open(choice,"a+")
         writer = csv.writer(f)
         date = self.date()
-        writer.writerow(["Date","bank","money","spent"])
         writer.writerow([date,self.bank,self.money,self.spent])
-        f.close
-        self.read(choice)
+        f.close()
+        self.reader(choice)
 
-
-
-
-    #list directory
-
-    #current standing of user for that day
-
-    #date
+    def toContinue(self):
+        while True:
+            print("Do you want to continue?\n")
+            answer = input()
+            ans = answer.lower()
+            if ans.startswith("y"):
+                self.option()
+            break
+        
     @staticmethod
     def date():
         today = datetime.datetime.now()
         date = today.strftime("%B %d,%Y")
         return date
-         
-        
-
-
-
-    
+  
 
 def main():
-    b = Budget(bank=3000,money=400,spent=300)
-    b.option()
+    print("Do you want to just read?\n")
+    answer = input()
+    ans = answer.lower()
+    if ans.startswith("y"):
+        b1 = Budget(bank=0, money=0,spent=0)
+        b1.listDir("1")
+    else:
+        bank = input("How much do you have on your bank account?")
+        money = input("How much money do you have on your wallet?")
+        spent = input("how much money did you spend today?")
+        b = Budget(bank,money,spent)
+        b.option()
+    
 if __name__ == "__main__":
     main()
